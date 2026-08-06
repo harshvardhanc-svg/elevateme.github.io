@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElevateMe | Browse Placed Talent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ElevateMe brand tokens */
+    --charcoal: #1A1A1A;
+    --terracotta: #C7493A;
+    --green: #488A6D;
+    --cream: #F2F1EE;
+    --white: #FFFFFF;
+    --border-gray: #C2C2C2;
+    --body-gray: #747474;
+    --warning-yellow: #FFD475;
+    --success-mint: #88D8B0;
+    --danger-salmon: #FE7E79;
+
+    --terracotta-tint: #f7e8e5;
+    --green-tint: #e8f1ec;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Nunito Sans", Arial, "Helvetica Neue", sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+  }
+
+  a { text-decoration: none; }
+
+  /* ---------- Header / Hero ---------- */
+  header.top {
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 28px 24px 34px;
+  }
+
+  .top-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+
+  .logo-chip {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  .brand-row img { height: 22px; width: auto; display: block; }
+
+  .brand-tag {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #cfcfcf;
+    border-left: 1px solid #444;
+    padding-left: 12px;
+  }
+
+  h1 {
+    margin: 0 0 10px;
+    font-family: "Nunito Sans", Arial, sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 46px);
+    line-height: 1.15;
+    letter-spacing: -0.3px;
+  }
+
+  .top-inner p.sub {
+    margin: 0 0 24px;
+    color: #d6d6d2;
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 640px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 8px;
+    padding: 12px 18px;
+    min-width: 140px;
+  }
+
+  .stat .num { font-size: 20px; font-weight: 800; }
+  .stat .num.accent-terracotta { color: #e8887c; }
+  .stat .num.accent-green { color: #8fc4a8; }
+  .stat .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #b6b6b2;
+    margin-top: 3px;
+  }
+
+  /* ---------- Main ---------- */
+  main {
+    max-width: 1180px;
+    margin: -14px auto 60px;
+    padding: 0 24px;
+  }
+
+  .panel {
+    background: var(--white);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 18px 20px;
+    box-shadow: 0 6px 18px rgba(26,26,26,0.07);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-end;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 180px;
+  }
+
+  .filter-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--body-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  select, input[type="search"] {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-gray);
+    background: var(--white);
+    color: var(--charcoal);
+  }
+
+  select:focus, input:focus { outline: 2px solid var(--terracotta); outline-offset: 1px; }
+
+  .search-group { flex: 1; min-width: 220px; }
+  .search-group input { width: 100%; }
+
+  .btn-outline {
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-gray);
+    background: var(--white);
+    color: var(--charcoal);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+  .btn-outline:hover { background: var(--cream); }
+
+  .results-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 22px 2px 14px;
+    font-size: 13px;
+    color: var(--body-gray);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(26,26,26,0.04);
+    transition: box-shadow .15s ease, transform .15s ease;
+  }
+  .card:hover { box-shadow: 0 10px 22px rgba(26,26,26,0.09); transform: translateY(-2px); }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1px solid var(--border-gray);
+    color: var(--charcoal);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .name-role .name { font-weight: 800; font-size: 16px; color: var(--charcoal); }
+  .name-role .role { font-size: 12.5px; color: var(--body-gray); margin-top: 1px; font-weight: 600; }
+
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .badge-visa { background: var(--green); color: var(--white); }
+  .badge-exp { background: transparent; border: 1px solid var(--border-gray); color: var(--charcoal); }
+
+  .blurb {
+    font-size: 14px;
+    color: #3d3d3d;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .skills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-chip {
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--cream);
+    border: 1px solid var(--border-gray);
+    color: var(--body-gray);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  .outcome {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: #1f5c3f;
+    font-weight: 700;
+    background: var(--success-mint);
+    padding: 7px 10px;
+    border-radius: 8px;
+  }
+
+  .card-footer {
+    margin-top: auto;
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    flex: 1;
+    text-align: center;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary { background: var(--terracotta); color: var(--white); }
+  .btn-primary:hover { background: #b03c2f; }
+  .btn-secondary { background: transparent; border: 1px solid var(--border-gray); color: var(--charcoal); }
+  .btn-secondary:hover { background: var(--cream); }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--body-gray);
+    font-size: 14px;
+  }
+
+  .privacy-note {
+    max-width: 1180px;
+    margin: 28px auto 0;
+    padding: 16px 22px;
+    background: var(--white);
+    border: 1px dashed var(--border-gray);
+    border-radius: 8px;
+    color: var(--body-gray);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .privacy-note strong { color: var(--charcoal); }
+
+  @media (max-width: 640px) {
+    .filters { flex-direction: column; align-items: stretch; }
+    .filter-group { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand-row">
+      <span class="logo-chip"><img src="data:image/png;base64,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" alt="ElevateMe logo"></span>
+      <span class="brand-tag">Talent Showcase</span>
+    </div>
+    <h1>Browse Candidates Ready to Hire</h1>
+    <p class="sub">A live look at professionals we've coached and placed into U.S. tech roles &mdash; filter by role, visa pathway, or experience level to find your next hire. Full profiles and direct intros are shared through our placement team.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="num accent-terracotta">1,800+</div><div class="label">Students Placed</div></div>
+      <div class="stat"><div class="num accent-green">82%</div><div class="label">Placement Success Rate</div></div>
+      <div class="stat"><div class="num accent-terracotta">$86K</div><div class="label">Avg. Salary Package</div></div>
+      <div class="stat"><div class="num accent-green" id="visibleCount">--</div><div class="label">Candidates Shown</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="filters">
+      <div class="filter-group">
+        <label for="roleFilter">Tech Role</label>
+        <select id="roleFilter">
+          <option value="">All roles</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="visaFilter">Visa / Status</label>
+        <select id="visaFilter">
+          <option value="">All statuses</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="expFilter">Experience Level</label>
+        <select id="expFilter">
+          <option value="">All levels</option>
+        </select>
+      </div>
+      <div class="filter-group search-group">
+        <label for="searchInput">Search Skills or Keywords</label>
+        <input type="search" id="searchInput" placeholder="e.g. React, AWS, data pipelines...">
+      </div>
+      <button class="btn-outline" id="resetBtn">Reset Filters</button>
+    </div>
+  </div>
+
+  <div class="results-bar">
+    <span id="resultsText">Showing all candidates</span>
+    <span>Profiles are anonymized &mdash; see privacy note below</span>
+  </div>
+
+  <div class="grid" id="cardGrid"></div>
+  <div class="empty" id="emptyState" style="display:none;">No candidates match those filters. Try adjusting your search.</div>
+</main>
+
+<div class="privacy-note">
+  <strong>About these profiles:</strong> Names shown are first-name + last-initial aliases, not full legal names. Candidates opt in before being featured here, and no visa case details, contact information, or documents are shown publicly. Employers interested in a candidate submit a request and ElevateMe's placement team facilitates a warm introduction with the candidate's consent.
+</div>
+
+<script>
+const candidates = [
+  { name: "Aisha R.", role: "Software Engineer", visa: "OPT", exp: "Entry-level (0-2 yrs)",
+    skills: ["Java", "Spring Boot", "AWS", "SQL"],
+    blurb: "Built and shipped 3 backend services during coursework; strong in distributed systems fundamentals.",
+    outcome: "Placed at a mid-size fintech · $92K" },
+  { name: "Daniel K.", role: "Data Analyst", visa: "STEM OPT", exp: "Entry-level (0-2 yrs)",
+    skills: ["Python", "SQL", "Tableau", "A/B Testing"],
+    blurb: "Led a capstone analytics project translating raw event data into an executive dashboard.",
+    outcome: "Placed at a retail analytics firm · $78K" },
+  { name: "Priya M.", role: "DevOps Engineer", visa: "H-1B", exp: "Mid-level (2-5 yrs)",
+    skills: ["Kubernetes", "Terraform", "CI/CD", "Azure"],
+    blurb: "3 years hands-on infra experience, migrated a legacy pipeline to containerized deploys.",
+    outcome: "Placed at an enterprise SaaS company · $118K" },
+  { name: "Wei C.", role: "QA Engineer", visa: "OPT", exp: "Entry-level (0-2 yrs)",
+    skills: ["Selenium", "Cypress", "API Testing"],
+    blurb: "Automated regression suites cutting manual QA time by 40% in a class project.",
+    outcome: "Placed at a healthtech startup · $74K" },
+  { name: "Fatima S.", role: "Data Scientist", visa: "STEM OPT", exp: "Mid-level (2-5 yrs)",
+    skills: ["Python", "PyTorch", "NLP", "MLOps"],
+    blurb: "Published research on text classification; deployed a model into a production recommender.",
+    outcome: "Placed at a mid-size fintech · $105K" },
+  { name: "Carlos G.", role: "Software Engineer", visa: "Green Card", exp: "Senior (5+ yrs)",
+    skills: ["React", "Node.js", "GraphQL", "System Design"],
+    blurb: "6 years full-stack experience, led a team of 4 on a customer-facing platform rebuild.",
+    outcome: "Placed at a Fortune 500 tech company · $148K" },
+  { name: "Neha T.", role: "Data Analyst", visa: "H-1B", exp: "Mid-level (2-5 yrs)",
+    skills: ["SQL", "Power BI", "dbt", "Snowflake"],
+    blurb: "Owns end-to-end reporting for a marketing org, from pipeline to exec dashboards.",
+    outcome: "Placed at a consumer goods enterprise · $96K" },
+  { name: "Omar B.", role: "Cloud/DevOps Engineer", visa: "OPT", exp: "Entry-level (0-2 yrs)",
+    skills: ["AWS", "Docker", "GitHub Actions"],
+    blurb: "Built a full CI/CD pipeline from scratch for a student startup project.",
+    outcome: "Placed at a logistics tech company · $82K" },
+  { name: "Sofia L.", role: "Product/UX Designer", visa: "L2", exp: "Mid-level (2-5 yrs)",
+    skills: ["Figma", "User Research", "Design Systems"],
+    blurb: "Redesigned onboarding flow for a fintech app, improving activation by 22%.",
+    outcome: "Placed at a payments company · $99K" },
+  { name: "Ravi P.", role: "Software Engineer", visa: "STEM OPT", exp: "Entry-level (0-2 yrs)",
+    skills: ["C++", "Python", "Algorithms"],
+    blurb: "Strong competitive programming background; contributed to an open-source ML library.",
+    outcome: "Placed at a semiconductor company · $95K" },
+  { name: "Grace H.", role: "Data Scientist", visa: "H-1B", exp: "Senior (5+ yrs)",
+    skills: ["R", "Python", "Causal Inference", "Experimentation"],
+    blurb: "5+ years running experimentation platforms for growth teams at scale.",
+    outcome: "Placed at a Fortune 500 tech company · $152K" },
+  { name: "Miguel A.", role: "QA Engineer", visa: "Green Card", exp: "Mid-level (2-5 yrs)",
+    skills: ["Test Automation", "Java", "Jenkins"],
+    blurb: "Built a company-wide test framework adopted across 5 product teams.",
+    outcome: "Placed at an enterprise SaaS company · $91K" },
+  { name: "Yuki N.", role: "Cloud/DevOps Engineer", visa: "OPT", exp: "Mid-level (2-5 yrs)",
+    skills: ["GCP", "Kubernetes", "Monitoring"],
+    blurb: "Reduced infra costs 18% through rightsizing and autoscaling improvements.",
+    outcome: "Placed at a media streaming company · $110K" },
+  { name: "Elena V.", role: "Software Engineer", visa: "STEM OPT", exp: "Mid-level (2-5 yrs)",
+    skills: ["TypeScript", "React", "Node.js"],
+    blurb: "Owns a customer dashboard feature area end-to-end, from design to deploy.",
+    outcome: "Placed at a mid-size fintech · $108K" },
+  { name: "Tariq J.", role: "Product/UX Designer", visa: "OPT", exp: "Entry-level (0-2 yrs)",
+    skills: ["Figma", "Prototyping", "Usability Testing"],
+    blurb: "Designed a mobile onboarding flow tested with 40+ users pre-launch.",
+    outcome: "Placed at a consumer app startup · $76K" },
+  { name: "Ana P.", role: "Data Analyst", visa: "Green Card", exp: "Senior (5+ yrs)",
+    skills: ["SQL", "Python", "Forecasting"],
+    blurb: "Leads demand forecasting analytics for a national retail chain.",
+    outcome: "Placed at a retail analytics firm · $102K" }
+];
+
+function initials(name) {
+  return name.split(" ").map(p => p[0]).slice(0,2).join("").toUpperCase();
+}
+
+function uniqueSorted(arr) {
+  return [...new Set(arr)].sort();
+}
+
+function populateSelect(id, values) {
+  const sel = document.getElementById(id);
+  values.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = v;
+    sel.appendChild(opt);
+  });
+}
+
+function cardHTML(c) {
+  return `
+    <div class="card" data-role="${c.role}" data-visa="${c.visa}" data-exp="${c.exp}">
+      <div class="card-head">
+        <div class="avatar">${initials(c.name)}</div>
+        <div class="name-role">
+          <div class="name">${c.name}</div>
+          <div class="role">${c.role}</div>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge badge-visa">${c.visa}</span>
+        <span class="badge badge-exp">${c.exp}</span>
+      </div>
+      <p class="blurb">${c.blurb}</p>
+      <div class="skills">
+        ${c.skills.map(s => `<span class="skill-chip">${s}</span>`).join("")}
+      </div>
+      <div class="outcome">✓ ${c.outcome}</div>
+      <div class="card-footer">
+        <button class="btn btn-primary">Request Intro</button>
+        <button class="btn btn-secondary">View Profile</button>
+      </div>
+    </div>
+  `;
+}
+
+function render() {
+  const role = document.getElementById("roleFilter").value;
+  const visa = document.getElementById("visaFilter").value;
+  const exp = document.getElementById("expFilter").value;
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+
+  const filtered = candidates.filter(c => {
+    if (role && c.role !== role) return false;
+    if (visa && c.visa !== visa) return false;
+    if (exp && c.exp !== exp) return false;
+    if (q && !(c.name+" "+c.skills.join(" ")+" "+c.blurb).toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const grid = document.getElementById("cardGrid");
+  grid.innerHTML = filtered.map(cardHTML).join("");
+  document.getElementById("emptyState").style.display = filtered.length ? "none" : "block";
+  document.getElementById("visibleCount").textContent = filtered.length;
+  document.getElementById("resultsText").textContent =
+    filtered.length === candidates.length
+      ? "Showing all candidates"
+      : `Showing ${filtered.length} of ${candidates.length} candidates`;
+}
+
+populateSelect("roleFilter", uniqueSorted(candidates.map(c => c.role)));
+populateSelect("visaFilter", uniqueSorted(candidates.map(c => c.visa)));
+populateSelect("expFilter", uniqueSorted(candidates.map(c => c.exp)));
+
+["roleFilter","visaFilter","expFilter"].forEach(id =>
+  document.getElementById(id).addEventListener("change", render)
+);
+document.getElementById("searchInput").addEventListener("input", render);
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.getElementById("roleFilter").value = "";
+  document.getElementById("visaFilter").value = "";
+  document.getElementById("expFilter").value = "";
+  document.getElementById("searchInput").value = "";
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
